@@ -6,8 +6,6 @@ import {TIPO} from "../TablaDeSimbolos/Tipo"
 export class Primitivos extends Instruccion{
     tipo:TIPO
     valor:any
-    fila:number
-    columna: Number
     constructor(tipo:TIPO, valor:any, fila:number, columna:number){
         super(fila,columna)
         this.tipo = tipo

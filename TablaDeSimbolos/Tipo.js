@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.TIPO = void 0;
+exports.OperadorAritmetico = exports.TIPO = void 0;
 var TIPO;
 (function (TIPO) {
     TIPO[TIPO["ENTERO"] = 1] = "ENTERO";
@@ -9,3 +9,13 @@ var TIPO;
     TIPO[TIPO["CARACTER"] = 4] = "CARACTER";
     TIPO[TIPO["CADENA"] = 5] = "CADENA";
 })(TIPO = exports.TIPO || (exports.TIPO = {}));
+var OperadorAritmetico;
+(function (OperadorAritmetico) {
+    OperadorAritmetico[OperadorAritmetico["MAS"] = 1] = "MAS";
+    OperadorAritmetico[OperadorAritmetico["MENOS"] = 2] = "MENOS";
+    OperadorAritmetico[OperadorAritmetico["POR"] = 3] = "POR";
+    OperadorAritmetico[OperadorAritmetico["DIV"] = 4] = "DIV";
+    OperadorAritmetico[OperadorAritmetico["POT"] = 5] = "POT";
+    OperadorAritmetico[OperadorAritmetico["MOD"] = 7] = "MOD";
+    OperadorAritmetico[OperadorAritmetico["UMENOS"] = 8] = "UMENOS";
+})(OperadorAritmetico = exports.OperadorAritmetico || (exports.OperadorAritmetico = {}));

@@ -25,8 +25,8 @@ export class Arbol{
         return this.expeciones
     }
 
-    setExcepciones(excepciones:Excepcion[]):void{
-        this.expeciones = excepciones
+    setExcepciones(excepcion:Excepcion):void{
+        this.expeciones.push(excepcion)
     }
 
     getConsola():string{

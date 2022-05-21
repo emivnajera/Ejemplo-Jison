@@ -18,8 +18,8 @@ var Arbol = /** @class */ (function () {
     Arbol.prototype.getExcepciones = function () {
         return this.expeciones;
     };
-    Arbol.prototype.setExcepciones = function (excepciones) {
-        this.expeciones = excepciones;
+    Arbol.prototype.setExcepciones = function (excepcion) {
+        this.expeciones.push(excepcion);
     };
     Arbol.prototype.getConsola = function () {
         return this.consola;
