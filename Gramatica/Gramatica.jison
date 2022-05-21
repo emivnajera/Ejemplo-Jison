@@ -10,6 +10,8 @@
 
 //Definir las palabras reservadas
 "print"             return 'RPRINT' 
+"true"              return 'RTRUE'
+"false"             return 'RFALSE'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -17,12 +19,13 @@
 ")"                 return 'PARC'
 
 //Expresiones regulares
+\"[^\"]*\"              { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
+\'[^\"]\'              { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }       
 [0-9]+("."[0-9]+)?\b    return 'DECIMAL';
+[0-9]+\b                return 'ENTERO';
 
 <<EOF>>				return 'EOF';
-.					{ console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
-                                          L_Error.getInstance().insertar(new N_Error("Lexico","Caracter: \" "+yytext+"\" no es valido" ,yylloc.first_line,yylloc.first_column));
-                                          return null; }
+.					{ console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column)}
 
 /lex
 
@@ -58,4 +61,10 @@ INSTRUCCION: PRINT{$$=$1};
 PRINT:RPRINT PARA EXP PARC PUNTOYCOMA {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
 
 
-EXP:DECIMAL                         {$$ = new Primitivos.Primitivos(TIPO.TIPO.ENTERO, $1,@1.first_line, @1.first_column )};
+EXP: DECIMAL    {$$ = new Primitivos.Primitivos(TIPO.TIPO.DECIMAL, $1,@1.first_line, @1.first_column )}
+   | ENTERO     {$$ = new Primitivos.Primitivos(TIPO.TIPO.ENTERO, $1,@1.first_line, @1.first_column  )}
+   | RTRUE      {$$ = new Primitivos.Primitivos(TIPO.TIPO.BOOLEANO, true,@1.first_line, @1.first_column  )}
+   | RFALSE     {$$ = new Primitivos.Primitivos(TIPO.TIPO.BOOLEANO, false,@1.first_line, @1.first_column  )}
+   | CADENA     {$$ = new Primitivos.Primitivos(TIPO.TIPO.CADENA, $1,@1.first_line, @1.first_column  )}
+   | CARACTER   {$$ = new Primitivos.Primitivos(TIPO.TIPO.CARACTER, $1,@1.first_line, @1.first_column  )} 
+   ;
