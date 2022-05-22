@@ -34,7 +34,6 @@ export class Aritmetica extends Instruccion{
 
             //Suma
             if (this.operador == OperadorAritmetico.MAS){
-                console.log("Aqui SUma")
                 if (this.OperacionIzq.tipo == TIPO.ENTERO && this.OperacionDer.tipo == TIPO.ENTERO){
                 this.tipo = TIPO.ENTERO
                 return this.obtenerVal(this.OperacionIzq.tipo,izq) + this.obtenerVal(this.OperacionDer.tipo,der)
@@ -152,7 +151,7 @@ export class Aritmetica extends Instruccion{
 
                 if (this.OperacionIzq.tipo == TIPO.BOOLEANO && this.OperacionDer.tipo == TIPO.BOOLEANO){
                     this.tipo = TIPO.ENTERO
-                    return Number(this.obtenerVal(this.OperacionIzq.tipo,izq)) + Number(this.obtenerVal(this.OperacionDer.tipo,der))
+                    return Number(this.obtenerVal(this.OperacionIzq.tipo,izq)) - Number(this.obtenerVal(this.OperacionDer.tipo,der))
                 }
 
                 return new Excepcion("Semantico", "Tipo Erroneo para Resta - ", this.fila, this.columna)
@@ -206,7 +205,7 @@ export class Aritmetica extends Instruccion{
            
                return new Excepcion("Semantico", "Tipo Erroneo para Division - ", this.fila, this.columna)
            }
-            //Division
+            //Modulo
              if (this.operador == OperadorAritmetico.MOD){
                 if (this.OperacionIzq.tipo == TIPO.ENTERO && this.OperacionDer.tipo == TIPO.ENTERO){
                     this.tipo = TIPO.DECIMAL

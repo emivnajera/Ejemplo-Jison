@@ -44,7 +44,6 @@ var Aritmetica = /** @class */ (function (_super) {
             }
             //Suma
             if (this.operador == Tipo_1.OperadorAritmetico.MAS) {
-                console.log("Aqui SUma");
                 if (this.OperacionIzq.tipo == Tipo_2.TIPO.ENTERO && this.OperacionDer.tipo == Tipo_2.TIPO.ENTERO) {
                     this.tipo = Tipo_2.TIPO.ENTERO;
                     return this.obtenerVal(this.OperacionIzq.tipo, izq) + this.obtenerVal(this.OperacionDer.tipo, der);
@@ -139,7 +138,7 @@ var Aritmetica = /** @class */ (function (_super) {
                 }
                 if (this.OperacionIzq.tipo == Tipo_2.TIPO.BOOLEANO && this.OperacionDer.tipo == Tipo_2.TIPO.BOOLEANO) {
                     this.tipo = Tipo_2.TIPO.ENTERO;
-                    return Number(this.obtenerVal(this.OperacionIzq.tipo, izq)) + Number(this.obtenerVal(this.OperacionDer.tipo, der));
+                    return Number(this.obtenerVal(this.OperacionIzq.tipo, izq)) - Number(this.obtenerVal(this.OperacionDer.tipo, der));
                 }
                 return new Excepcion_1.Excepcion("Semantico", "Tipo Erroneo para Resta - ", this.fila, this.columna);
             }
@@ -183,7 +182,7 @@ var Aritmetica = /** @class */ (function (_super) {
                 }
                 return new Excepcion_1.Excepcion("Semantico", "Tipo Erroneo para Division - ", this.fila, this.columna);
             }
-            //Division
+            //Modulo
             if (this.operador == Tipo_1.OperadorAritmetico.MOD) {
                 if (this.OperacionIzq.tipo == Tipo_2.TIPO.ENTERO && this.OperacionDer.tipo == Tipo_2.TIPO.ENTERO) {
                     this.tipo = Tipo_2.TIPO.DECIMAL;
