@@ -7,7 +7,14 @@ var Simbolo = /** @class */ (function () {
         this.tipo = tipo;
         this.fila = fila;
         this.columna = columna;
+        this.valor = valor;
     }
+    Simbolo.prototype.getTipo = function () {
+        return this.tipo;
+    };
+    Simbolo.prototype.getValor = function () {
+        return this.valor;
+    };
     return Simbolo;
 }());
 exports.Simbolo = Simbolo;

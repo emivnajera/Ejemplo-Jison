@@ -1,6 +1,7 @@
 import { Instruccion } from "../Abstract/Instruccion"
 import { Excepcion } from "./Excepcion"
 import { TablaSimbolos } from "./TablaSimbolos"
+import { Simbolo } from "./Simbolo"
 
 export class Arbol{
     instrucciones:Instruccion[]
@@ -8,6 +9,7 @@ export class Arbol{
     funciones:any[]=[]
     consola:string = ""
     TSglobal:TablaSimbolos|null = null
+    simbolos:Simbolo[] = []
 
     constructor(instrucciones:Instruccion[]){
         this.instrucciones = instrucciones
@@ -39,5 +41,13 @@ export class Arbol{
 
     getTSGlobal(TSglobal:TablaSimbolos){
         this.TSglobal = TSglobal
+    }
+
+    addSimbolo(simbolo:Simbolo):void{
+        this.simbolos.push(simbolo)
+    }
+
+    getSimbolos():Simbolo[]{
+        return this.simbolos
     }
 }

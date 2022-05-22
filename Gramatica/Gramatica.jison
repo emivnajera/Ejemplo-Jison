@@ -12,6 +12,7 @@
 "print"             return 'RPRINT' 
 "true"              return 'RTRUE'
 "false"             return 'RFALSE'
+"var"               return 'RVAR'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -27,6 +28,7 @@
 "<"                 return 'MENOR'
 ">"                 return 'MAYOR'
 "!="                return 'DIFERENTE'
+"="                 return 'IGUAL'
 "=="                return 'IGUALIGUAL'
 "||"                return 'OR'
 "&&"                return 'AND'
@@ -34,10 +36,11 @@
 
 
 //Expresiones regulares
-\"[^\"]*\"              { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
-\'[^\"]\'              { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }       
-[0-9]+"."[0-9]+\b       return 'DECIMAL';
-[0-9]+\b                return 'ENTERO';
+\"[^\"]*\"                  { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
+\'[^\"]\'                   { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }       
+[0-9]+"."[0-9]+\b           return 'DECIMAL';
+[0-9]+\b                    return 'ENTERO';
+([a-zA-Z_])[a-zA-Z0-9_]*    return 'ID';
 
 <<EOF>>				return 'EOF';
 .					{ console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column)}
@@ -53,6 +56,8 @@
     const Aritmeticas = require('../Expresiones/Aritmetica')
     const Relacionales = require('../Expresiones/Relacional')
     const Logicas = require('../Expresiones/Logica')
+    const Declaracion = require('../Instrucciones/Declaracion')
+    const Identificador = require('../Expresiones/Identificador')
 %}
 
 // Precedencia de operadores
@@ -80,9 +85,13 @@ S: INSTRUCCIONES EOF {$$ = $1; return $$} ;
 INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {if ($2 != ""){$1.push($2)};$$ = $1}
              | INSTRUCCION{if ($1 == ""){$$ = [] }else{ $$ = [$1] }} ;
 
-INSTRUCCION: PRINT{$$=$1};
+INSTRUCCION: PRINT          {$$=$1}
+           | DECLARACION    {$$=$1}
+           ;
 
-PRINT:RPRINT PARA EXP PARC PUNTOYCOMA {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
+PRINT:RPRINT PARA EXP PARC PUNTOYCOMA       {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
+
+DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA   {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};          
 
 
 EXP: EXP MAS EXP            {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
@@ -100,6 +109,7 @@ EXP: EXP MAS EXP            {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritme
    | EXP OR EXP             {$$ = new Logicas.Logica(TIPO.OperadorLogico.OR, $1, $3, @1.first_line, @1.first_column )}
    | MENOS EXP %prec UMENOS {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.UMENOS, $2, null, @1.first_line, @1.first_column )}
    | NOT EXP %prec UNOT     {$$ = new Logicas.Logica(TIPO.OperadorLogico.NOT, $2, null, @1.first_line, @1.first_column )}
+   | ID                     {$$ = new Identificador.identificador($1,@1.first_line, @1.first_column)}
    | DECIMAL                {$$ = new Primitivos.Primitivos(TIPO.TIPO.DECIMAL, $1,@1.first_line, @1.first_column )}
    | ENTERO                 {$$ = new Primitivos.Primitivos(TIPO.TIPO.ENTERO, $1,@1.first_line, @1.first_column  )}
    | RTRUE                  {$$ = new Primitivos.Primitivos(TIPO.TIPO.BOOLEANO, true,@1.first_line, @1.first_column  )}

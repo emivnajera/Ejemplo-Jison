@@ -7,6 +7,7 @@ var Arbol = /** @class */ (function () {
         this.funciones = [];
         this.consola = "";
         this.TSglobal = null;
+        this.simbolos = [];
         this.instrucciones = instrucciones;
     }
     Arbol.prototype.getInstrucciones = function () {
@@ -29,6 +30,12 @@ var Arbol = /** @class */ (function () {
     };
     Arbol.prototype.getTSGlobal = function (TSglobal) {
         this.TSglobal = TSglobal;
+    };
+    Arbol.prototype.addSimbolo = function (simbolo) {
+        this.simbolos.push(simbolo);
+    };
+    Arbol.prototype.getSimbolos = function () {
+        return this.simbolos;
     };
     return Arbol;
 }());

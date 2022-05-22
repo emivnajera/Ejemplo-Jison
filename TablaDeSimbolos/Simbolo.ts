@@ -11,5 +11,14 @@ export class Simbolo{
         this.tipo = tipo
         this.fila = fila
         this.columna = columna
+        this.valor = valor
+    }
+
+    getTipo():TIPO{
+        return this.tipo
+    }
+
+    getValor():any{
+        return this.valor
     }
 }

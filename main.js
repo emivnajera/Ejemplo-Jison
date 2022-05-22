@@ -7,10 +7,10 @@ fs.readFile('./entrada.txt', (err, data) => {
     if (err) throw err;
     var instrucciones = parser.parse(data.toString());
     var ast = new Arbol.Arbol(instrucciones)
-    TSGlobal = TablaDeSimbolos.TablaSimbolos()
+    Tabla = new TablaDeSimbolos.TablaSimbolos()
 
     for(var instruccion of ast.getInstrucciones()){
-        instruccion.Interpretar(ast, TSGlobal)
+        instruccion.Interpretar(ast, Tabla)
     }
 
     consola = ast.getConsola();
