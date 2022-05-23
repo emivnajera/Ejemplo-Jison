@@ -1,2 +1,2 @@
-print(round(2.32));
-print(tolower("HOLA MUNDO"));
+
+print((2+2));

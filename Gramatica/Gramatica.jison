@@ -15,7 +15,9 @@
 "var"               return 'RVAR'
 "func"              return 'RFUNC'
 "round"             return 'RROUND'
-"tolower"             return 'RTOLOWER'
+"tolower"           return 'RTOLOWER'
+"if"                return 'RIF'
+"else"              return 'RELSE'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -69,6 +71,7 @@
     const Llamada = require('../Instrucciones/Llamada')
     const Round = require('../Expresiones/Round')
     const tolower = require('../Expresiones/ToLower')
+    const If = require('../Instrucciones/If')
 %}
 
 // Precedencia de operadores
@@ -101,29 +104,33 @@ INSTRUCCION: PRINT          {$$=$1}
            | ASIGNACION     {$$=$1}
            | FUNCION        {$$=$1}
            | LLAMADA        {$$=$1}
+           | IF             {$$=$1}
            ;
 
-PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                               {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
+PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                                               {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
 
-DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA                           {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
+DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA                                           {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
 
-ASIGNACION: ID IGUAL EXP PUNTOYCOMA                                 {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
+ASIGNACION: ID IGUAL EXP PUNTOYCOMA                                                 {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
 
-LLAMADA: ID PARA PARC PUNTOYCOMA                                    {$$ = new Llamada.Llamada($1,[],@2.first_line, @2.first_column)}
-       | ID PARA PARAMETROSLL PARC PUNTOYCOMA                       {$$ = new Llamada.Llamada($1, $3,@2.first_line, @2.first_column)};
+LLAMADA: ID PARA PARC PUNTOYCOMA                                                    {$$ = new Llamada.Llamada($1,[],@2.first_line, @2.first_column)}
+       | ID PARA PARAMETROSLL PARC PUNTOYCOMA                                       {$$ = new Llamada.Llamada($1, $3,@2.first_line, @2.first_column)};
 
-FUNCION: RFUNC ID PARA PARAMETROS PARC LLAVEA INSTRUCCIONES LLAVEC  {$$ = new Funcion.Funcion($2, $4, $7,@2.first_line, @2.first_column)}
-       | RFUNC ID PARA PARC LLAVEA INSTRUCCIONES LLAVEC             {$$ = new Funcion.Funcion($2, [], $6,@2.first_line, @2.first_column)};
+FUNCION: RFUNC ID PARA PARAMETROS PARC LLAVEA INSTRUCCIONES LLAVEC                  {$$ = new Funcion.Funcion($2, $4, $7,@2.first_line, @2.first_column)}
+       | RFUNC ID PARA PARC LLAVEA INSTRUCCIONES LLAVEC                             {$$ = new Funcion.Funcion($2, [], $6,@2.first_line, @2.first_column)};
 
-PARAMETROS: PARAMETROS COMA PARAMETRO                               {$1.push($3);$$=$1}
-          | PARAMETRO                                               {$$ = [$1]};  
+PARAMETROS: PARAMETROS COMA PARAMETRO                                               {$1.push($3);$$=$1}
+          | PARAMETRO                                                               {$$ = [$1]};  
 
-PARAMETRO: ID                                                       {$$ = $1};
+PARAMETRO: ID                                                                       {$$ = $1};
 
-PARAMETROSLL: PARAMETROSLL COMA PARAMETROLL                         {$1.push($3);$$=$1}
-            | PARAMETROLL                                           {$$ = [$1]};      
+PARAMETROSLL: PARAMETROSLL COMA PARAMETROLL                                         {$1.push($3);$$=$1}
+            | PARAMETROLL                                                           {$$ = [$1]};      
 
-PARAMETROLL: EXP                                                    {$$ = $1};
+PARAMETROLL: EXP                                                                    {$$ = $1};
+
+IF: RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                   {$$ = new If.If($3, $6, [], @1.first_line, @1.first_column)}       
+  | RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC RELSE LLAVEA INSTRUCCIONES LLAVEC {$$ = new If.If($3, $6, $10, @1.first_line, @1.first_column)};
 
 EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
    | EXP MENOS EXP                      {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MENOS, $1, $3, @1.first_line, @1.first_column )}
@@ -142,6 +149,7 @@ EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.Op
    | NOT EXP %prec UNOT                 {$$ = new Logicas.Logica(TIPO.OperadorLogico.NOT, $2, null, @1.first_line, @1.first_column )}
    | RROUND PARA EXP PARC               {$$ = new Round.Round($3, @1.first_line, @1.first_column)}
    | RTOLOWER PARA EXP PARC             {$$ = new tolower.ToLower($3, @1.first_line, @1.first_column)}
+   | PARA EXP PARC                      {$$ = $2}
    | ID                                 {$$ = new Identificador.identificador($1,@1.first_line, @1.first_column)}
    | DECIMAL                            {$$ = new Primitivos.Primitivos(TIPO.TIPO.DECIMAL, $1,@1.first_line, @1.first_column )}
    | ENTERO                             {$$ = new Primitivos.Primitivos(TIPO.TIPO.ENTERO, $1,@1.first_line, @1.first_column  )}
