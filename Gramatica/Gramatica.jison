@@ -19,6 +19,7 @@
 "if"                return 'RIF'
 "else"              return 'RELSE'
 "while"             return 'RWHILE'
+"for"               return 'RFOR'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -74,6 +75,8 @@
     const tolower = require('../Expresiones/ToLower')
     const If = require('../Instrucciones/If')
     const While = require('../Instrucciones/While')
+    const Incremento = require('../Instrucciones/Incremento')
+    const For = require('../Instrucciones/For')
 %}
 
 // Precedencia de operadores
@@ -101,41 +104,47 @@ S: INSTRUCCIONES EOF {$$ = $1; return $$} ;
 INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {if ($2 != ""){$1.push($2)};$$ = $1}
              | INSTRUCCION{if ($1 == ""){$$ = [] }else{ $$ = [$1] }} ;
 
-INSTRUCCION: PRINT          {$$=$1}
-           | DECLARACION    {$$=$1}
-           | ASIGNACION     {$$=$1}
-           | FUNCION        {$$=$1}
-           | LLAMADA        {$$=$1}
-           | IF             {$$=$1}
-           | WHILE          {$$=$1}
+INSTRUCCION: PRINT                 {$$=$1}
+           | DECLARACION           {$$=$1}
+           | ASIGNACION            {$$=$1}
+           | FUNCION               {$$=$1}
+           | LLAMADA               {$$=$1}
+           | IF                    {$$=$1}
+           | WHILE                 {$$=$1}
+           | INCREMENTO PUNTOYCOMA {$$=$1}
+           | FOR                   {$$=$1}
            ;
 
-PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                                               {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
+PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                                                             {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
 
-DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA                                           {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
+DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA                                                         {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
 
-ASIGNACION: ID IGUAL EXP PUNTOYCOMA                                                 {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
+ASIGNACION: ID IGUAL EXP PUNTOYCOMA                                                               {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
 
-LLAMADA: ID PARA PARC PUNTOYCOMA                                                    {$$ = new Llamada.Llamada($1,[],@2.first_line, @2.first_column)}
-       | ID PARA PARAMETROSLL PARC PUNTOYCOMA                                       {$$ = new Llamada.Llamada($1, $3,@2.first_line, @2.first_column)};
+LLAMADA: ID PARA PARC PUNTOYCOMA                                                                  {$$ = new Llamada.Llamada($1,[],@2.first_line, @2.first_column)}
+       | ID PARA PARAMETROSLL PARC PUNTOYCOMA                                                     {$$ = new Llamada.Llamada($1, $3,@2.first_line, @2.first_column)};
 
-FUNCION: RFUNC ID PARA PARAMETROS PARC LLAVEA INSTRUCCIONES LLAVEC                  {$$ = new Funcion.Funcion($2, $4, $7,@2.first_line, @2.first_column)}
-       | RFUNC ID PARA PARC LLAVEA INSTRUCCIONES LLAVEC                             {$$ = new Funcion.Funcion($2, [], $6,@2.first_line, @2.first_column)};
+FUNCION: RFUNC ID PARA PARAMETROS PARC LLAVEA INSTRUCCIONES LLAVEC                                {$$ = new Funcion.Funcion($2, $4, $7,@2.first_line, @2.first_column)}
+       | RFUNC ID PARA PARC LLAVEA INSTRUCCIONES LLAVEC                                           {$$ = new Funcion.Funcion($2, [], $6,@2.first_line, @2.first_column)};
 
-PARAMETROS: PARAMETROS COMA PARAMETRO                                               {$1.push($3);$$=$1}
-          | PARAMETRO                                                               {$$ = [$1]};  
+PARAMETROS: PARAMETROS COMA PARAMETRO                                                             {$1.push($3);$$=$1}
+          | PARAMETRO                                                                             {$$ = [$1]};  
 
-PARAMETRO: ID                                                                       {$$ = $1};
+PARAMETRO: ID                                                                                     {$$ = $1};
 
-PARAMETROSLL: PARAMETROSLL COMA PARAMETROLL                                         {$1.push($3);$$=$1}
-            | PARAMETROLL                                                           {$$ = [$1]};      
+PARAMETROSLL: PARAMETROSLL COMA PARAMETROLL                                                       {$1.push($3);$$=$1}
+            | PARAMETROLL                                                                         {$$ = [$1]};      
 
-PARAMETROLL: EXP                                                                    {$$ = $1};
+PARAMETROLL: EXP                                                                                  {$$ = $1};
 
-IF: RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                   {$$ = new If.If($3, $6, [], @1.first_line, @1.first_column)}       
-  | RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC RELSE LLAVEA INSTRUCCIONES LLAVEC {$$ = new If.If($3, $6, $10, @1.first_line, @1.first_column)};
+INCREMENTO: ID MAS MAS                                                                            {$$ = new Incremento.Incremento($1,@2.first_line, @2.first_column )};
 
-WHILE: RWHILE PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                             {$$ = new While.While($3, $6, @1.first_line, @1.first_column)};
+FOR: RFOR PARA DECLARACION EXP PUNTOYCOMA INCREMENTO PARC LLAVEA INSTRUCCIONES LLAVEC             {$$ = new For.For($3, $4, $9, $6,@2.first_line, @2.first_column )};
+
+IF: RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                                 {$$ = new If.If($3, $6, [], @1.first_line, @1.first_column)}       
+  | RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC RELSE LLAVEA INSTRUCCIONES LLAVEC               {$$ = new If.If($3, $6, $10, @1.first_line, @1.first_column)};
+
+WHILE: RWHILE PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                           {$$ = new While.While($3, $6, @1.first_line, @1.first_column)};
 
 EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
    | EXP MENOS EXP                      {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MENOS, $1, $3, @1.first_line, @1.first_column )}
