@@ -1,11 +1,2 @@
-func funcion1(){
-    print("Esto es una funcion1");
-}
-
-func suma(numero1,numero2){
-    print("suma:");
-    print(numero1+numero2);
-}
-
-funcion1();
-suma(3,2);
+print(round(2.32));
+print(tolower("HOLA MUNDO"));
