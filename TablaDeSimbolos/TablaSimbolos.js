@@ -44,6 +44,24 @@ var TablaSimbolos = /** @class */ (function () {
         }
         return null;
     };
+    TablaSimbolos.prototype.actualizarTabla = function (simbolo) {
+        var tablaActual = this;
+        while (tablaActual != null) {
+            var encontrado = false;
+            for (var _i = 0, _a = tablaActual.tabla; _i < _a.length; _i++) {
+                var tsimbolo = _a[_i];
+                if (simbolo.id == tsimbolo.id) {
+                    tsimbolo.valor = simbolo.valor;
+                    tsimbolo.tipo = simbolo.tipo;
+                    encontrado = true;
+                    return null;
+                }
+            }
+            if (!encontrado) {
+                tablaActual = tablaActual.anterior;
+            }
+        }
+    };
     return TablaSimbolos;
 }());
 exports.TablaSimbolos = TablaSimbolos;

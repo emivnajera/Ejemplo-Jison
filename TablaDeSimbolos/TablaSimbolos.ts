@@ -45,4 +45,22 @@ export class TablaSimbolos{
         }
         return null
     }
+
+    actualizarTabla(simbolo:Simbolo){
+        let tablaActual:TablaSimbolos|null = this
+        while (tablaActual != null){
+            let encontrado:boolean = false
+            for(var tsimbolo of tablaActual.tabla){
+                if (simbolo.id == tsimbolo.id){
+                    tsimbolo.valor = simbolo.valor
+                    tsimbolo.tipo = simbolo.tipo
+                    encontrado = true
+                    return null
+                }
+            }
+            if(!encontrado){
+                tablaActual = tablaActual.anterior
+            }
+        }
+    }
 }

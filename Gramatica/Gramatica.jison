@@ -58,6 +58,7 @@
     const Logicas = require('../Expresiones/Logica')
     const Declaracion = require('../Instrucciones/Declaracion')
     const Identificador = require('../Expresiones/Identificador')
+    const Asignacion = require('../Instrucciones/Asignacion')
 %}
 
 // Precedencia de operadores
@@ -87,11 +88,14 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {if ($2 != ""){$1.push($2)};$$ = $1}
 
 INSTRUCCION: PRINT          {$$=$1}
            | DECLARACION    {$$=$1}
+           | ASIGNACION     {$$=$1}
            ;
 
 PRINT:RPRINT PARA EXP PARC PUNTOYCOMA       {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
 
-DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA   {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};          
+DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA   {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
+
+ASIGNACION: ID IGUAL EXP PUNTOYCOMA         {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
 
 
 EXP: EXP MAS EXP            {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}

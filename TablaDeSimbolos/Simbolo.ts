@@ -2,11 +2,11 @@ import { TIPO } from "./Tipo"
 
 export class Simbolo{
     id:string
-    tipo: TIPO
+    tipo: TIPO|null
     fila:number
     columna:number
     valor:any
-    constructor(id:string, tipo:TIPO, fila:number, columna:number, valor:any){
+    constructor(id:string, tipo:TIPO|null, fila:number, columna:number, valor:any){
         this.id = id
         this.tipo = tipo
         this.fila = fila
@@ -14,7 +14,7 @@ export class Simbolo{
         this.valor = valor
     }
 
-    getTipo():TIPO{
+    getTipo():TIPO|null{
         return this.tipo
     }
 

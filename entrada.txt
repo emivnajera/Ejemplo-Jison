@@ -1,2 +1,4 @@
 var numero = 53;
 print(numero);
+numero = 10;
+print(numero);
