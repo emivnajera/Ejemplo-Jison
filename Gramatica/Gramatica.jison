@@ -18,6 +18,7 @@
 "tolower"           return 'RTOLOWER'
 "if"                return 'RIF'
 "else"              return 'RELSE'
+"while"             return 'RWHILE'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -36,8 +37,8 @@
 "<"                 return 'MENOR'
 ">"                 return 'MAYOR'
 "!="                return 'DIFERENTE'
-"="                 return 'IGUAL'
 "=="                return 'IGUALIGUAL'
+"="                 return 'IGUAL'
 "||"                return 'OR'
 "&&"                return 'AND'
 "!"                 return 'NOT'
@@ -72,6 +73,7 @@
     const Round = require('../Expresiones/Round')
     const tolower = require('../Expresiones/ToLower')
     const If = require('../Instrucciones/If')
+    const While = require('../Instrucciones/While')
 %}
 
 // Precedencia de operadores
@@ -105,6 +107,7 @@ INSTRUCCION: PRINT          {$$=$1}
            | FUNCION        {$$=$1}
            | LLAMADA        {$$=$1}
            | IF             {$$=$1}
+           | WHILE          {$$=$1}
            ;
 
 PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                                               {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
@@ -131,6 +134,8 @@ PARAMETROLL: EXP                                                                
 
 IF: RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                   {$$ = new If.If($3, $6, [], @1.first_line, @1.first_column)}       
   | RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC RELSE LLAVEA INSTRUCCIONES LLAVEC {$$ = new If.If($3, $6, $10, @1.first_line, @1.first_column)};
+
+WHILE: RWHILE PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                             {$$ = new While.While($3, $6, @1.first_line, @1.first_column)};
 
 EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
    | EXP MENOS EXP                      {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MENOS, $1, $3, @1.first_line, @1.first_column )}

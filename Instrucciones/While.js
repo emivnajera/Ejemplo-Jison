@@ -15,53 +15,45 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-exports.If = void 0;
+exports.While = void 0;
 var Instruccion_1 = require("../Abstract/Instruccion");
 var TablaSimbolos_1 = require("../TablaDeSimbolos/TablaSimbolos");
 var Excepcion_1 = require("../TablaDeSimbolos/Excepcion");
 var Tipo_1 = require("../TablaDeSimbolos/Tipo");
-var If = /** @class */ (function (_super) {
-    __extends(If, _super);
-    function If(condicion, instruccionesIf, instruccionesElse, fila, columna) {
+var While = /** @class */ (function (_super) {
+    __extends(While, _super);
+    function While(condicion, instrucciones, fila, columna) {
         var _this = _super.call(this, fila, columna) || this;
         _this.condicion = condicion;
-        _this.instruccionesIf = instruccionesIf;
-        _this.instruccionesElse = instruccionesElse;
+        _this.instrucciones = instrucciones;
         return _this;
     }
-    If.prototype.Interpretar = function (tree, table) {
-        var condicion = this.condicion.Interpretar(tree, table);
-        if (condicion instanceof Excepcion_1.Excepcion) {
-            return condicion;
-        }
-        if (this.condicion.tipo == Tipo_1.TIPO.BOOLEANO) {
-            if (condicion == true) {
-                var nuevaTabla = new TablaSimbolos_1.TablaSimbolos(table);
-                for (var _i = 0, _a = this.instruccionesIf; _i < _a.length; _i++) {
-                    var instruccion = _a[_i];
-                    var result = instruccion.Interpretar(tree, nuevaTabla);
-                    if (result instanceof Excepcion_1.Excepcion) {
-                        return result;
-                    }
-                }
+    While.prototype.Interpretar = function (tree, table) {
+        while (true) {
+            var condicion = this.condicion.Interpretar(tree, table);
+            if (condicion instanceof Excepcion_1.Excepcion) {
+                return Excepcion_1.Excepcion;
             }
-            else {
-                if (this.instruccionesElse != []) {
+            if (this.condicion.tipo == Tipo_1.TIPO.BOOLEANO) {
+                if (condicion) {
                     var nuevaTabla = new TablaSimbolos_1.TablaSimbolos(table);
-                    for (var _b = 0, _c = this.instruccionesElse; _b < _c.length; _b++) {
-                        var instruccion = _c[_b];
+                    for (var _i = 0, _a = this.instrucciones; _i < _a.length; _i++) {
+                        var instruccion = _a[_i];
                         var result = instruccion.Interpretar(tree, nuevaTabla);
                         if (result instanceof Excepcion_1.Excepcion) {
                             return result;
                         }
                     }
                 }
+                else {
+                    break;
+                }
+            }
+            else {
+                return new Excepcion_1.Excepcion("Semantico", "Tipo de Dato no Booleano en While", this.fila, this.columna);
             }
         }
-        else {
-            return new Excepcion_1.Excepcion("Semantico", "Tipo de Dato no Booleano en If", this.fila, this.columna);
-        }
     };
-    return If;
+    return While;
 }(Instruccion_1.Instruccion));
-exports.If = If;
+exports.While = While;

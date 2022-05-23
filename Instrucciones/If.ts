@@ -22,7 +22,7 @@ export class If extends Instruccion{
             return condicion
         }
 
-        if (this.condicion.tipo = TIPO.BOOLEANO){
+        if (this.condicion.tipo == TIPO.BOOLEANO){
             if (condicion == true){
                 let nuevaTabla = new TablaSimbolos(table)
                 for(var instruccion of this.instruccionesIf){
@@ -30,7 +30,6 @@ export class If extends Instruccion{
                     if (result instanceof Excepcion){
                         return result
                     }
-
                 }
             }else{
                 if (this.instruccionesElse != []){
@@ -40,9 +39,11 @@ export class If extends Instruccion{
                          if (result instanceof Excepcion){
                              return result
                          }
+                    }
                 }
             }
+        }else{
+            return new Excepcion("Semantico", "Tipo de Dato no Booleano en If", this.fila, this.columna)
         }
     }
-}
 }
