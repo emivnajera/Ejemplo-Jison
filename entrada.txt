@@ -1,4 +1,11 @@
-var numero = 53;
-print(numero);
-numero = 10;
-print(numero);
+func funcion1(){
+    print("Esto es una funcion1");
+}
+
+func suma(numero1,numero2){
+    print("suma:");
+    print(numero1+numero2);
+}
+
+funcion1();
+suma(3,2);

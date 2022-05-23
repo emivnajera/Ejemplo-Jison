@@ -8,6 +8,7 @@ var TIPO;
     TIPO[TIPO["BOOLEANO"] = 3] = "BOOLEANO";
     TIPO[TIPO["CARACTER"] = 4] = "CARACTER";
     TIPO[TIPO["CADENA"] = 5] = "CADENA";
+    TIPO[TIPO["VOID"] = 6] = "VOID";
 })(TIPO = exports.TIPO || (exports.TIPO = {}));
 var OperadorAritmetico;
 (function (OperadorAritmetico) {

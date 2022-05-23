@@ -4,6 +4,7 @@ export enum TIPO{
     BOOLEANO = 3,
     CARACTER = 4,
     CADENA = 5,
+    VOID = 6,
 }
 
 export  enum  OperadorAritmetico{

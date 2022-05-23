@@ -13,11 +13,15 @@
 "true"              return 'RTRUE'
 "false"             return 'RFALSE'
 "var"               return 'RVAR'
+"func"               return 'RFUNC'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
 "("                 return 'PARA'
 ")"                 return 'PARC'
+"{"                 return 'LLAVEA'
+"}"                 return 'LLAVEC'
+","                 return 'COMA'
 "+"                 return 'MAS'
 "-"                 return 'MENOS'
 "*"                 return 'POR'
@@ -59,6 +63,8 @@
     const Declaracion = require('../Instrucciones/Declaracion')
     const Identificador = require('../Expresiones/Identificador')
     const Asignacion = require('../Instrucciones/Asignacion')
+    const Funcion = require('../Instrucciones/Funcion')
+    const Llamada = require('../Instrucciones/Llamada')
 %}
 
 // Precedencia de operadores
@@ -89,14 +95,31 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {if ($2 != ""){$1.push($2)};$$ = $1}
 INSTRUCCION: PRINT          {$$=$1}
            | DECLARACION    {$$=$1}
            | ASIGNACION     {$$=$1}
+           | FUNCION        {$$=$1}
+           | LLAMADA        {$$=$1}
            ;
 
-PRINT:RPRINT PARA EXP PARC PUNTOYCOMA       {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
+PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                               {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
 
-DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA   {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
+DECLARACION: RVAR ID IGUAL EXP PUNTOYCOMA                           {$$ = new Declaracion.Declaracion($2, $4, @2.first_line, @2.first_column)};   
 
-ASIGNACION: ID IGUAL EXP PUNTOYCOMA         {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
+ASIGNACION: ID IGUAL EXP PUNTOYCOMA                                 {$$ = new Asignacion.Asignacion($1, $3, @2.first_line, @2.first_column)};
 
+LLAMADA: ID PARA PARC PUNTOYCOMA                                    {$$ = new Llamada.Llamada($1,[],@2.first_line, @2.first_column)}
+       | ID PARA PARAMETROSLL PARC PUNTOYCOMA                       {$$ = new Llamada.Llamada($1, $3,@2.first_line, @2.first_column)};
+
+FUNCION: RFUNC ID PARA PARAMETROS PARC LLAVEA INSTRUCCIONES LLAVEC  {$$ = new Funcion.Funcion($2, $4, $7,@2.first_line, @2.first_column)}
+       | RFUNC ID PARA PARC LLAVEA INSTRUCCIONES LLAVEC             {$$ = new Funcion.Funcion($2, [], $6,@2.first_line, @2.first_column)};
+
+PARAMETROS: PARAMETROS COMA PARAMETRO                               {$1.push($3);$$=$1}
+          | PARAMETRO                                               {$$ = [$1]};  
+
+PARAMETRO: ID                                                       {$$ = $1};
+
+PARAMETROSLL: PARAMETROSLL COMA PARAMETROLL                         {$1.push($3);$$=$1}
+            | PARAMETROLL                                           {$$ = [$1]};      
+
+PARAMETROLL: EXP                                                    {$$ = $1};
 
 EXP: EXP MAS EXP            {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
    | EXP MENOS EXP          {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MENOS, $1, $3, @1.first_line, @1.first_column )}

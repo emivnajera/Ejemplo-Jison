@@ -2,11 +2,12 @@ import { Instruccion } from "../Abstract/Instruccion"
 import { Excepcion } from "./Excepcion"
 import { TablaSimbolos } from "./TablaSimbolos"
 import { Simbolo } from "./Simbolo"
+import { Funcion } from "../Instrucciones/Funcion"
 
 export class Arbol{
     instrucciones:Instruccion[]
     expeciones:Excepcion[]=[]
-    funciones:any[]=[]
+    funciones:Funcion[]=[]
     consola:string = ""
     TSglobal:TablaSimbolos|null = null
     simbolos:Simbolo[] = []
@@ -49,5 +50,18 @@ export class Arbol{
 
     getSimbolos():Simbolo[]{
         return this.simbolos
+    }
+
+    addFuncion(funcion:Funcion):void{
+        this.funciones.push(funcion)
+    }
+
+    getFuncion(nombre:string):any{
+        for(var funcion of this.funciones){
+            if(funcion.nombre == nombre){
+                return funcion
+            }
+        }
+        return null
     }
 }

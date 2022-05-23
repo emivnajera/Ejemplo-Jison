@@ -37,6 +37,18 @@ var Arbol = /** @class */ (function () {
     Arbol.prototype.getSimbolos = function () {
         return this.simbolos;
     };
+    Arbol.prototype.addFuncion = function (funcion) {
+        this.funciones.push(funcion);
+    };
+    Arbol.prototype.getFuncion = function (nombre) {
+        for (var _i = 0, _a = this.funciones; _i < _a.length; _i++) {
+            var funcion = _a[_i];
+            if (funcion.nombre == nombre) {
+                return funcion;
+            }
+        }
+        return null;
+    };
     return Arbol;
 }());
 exports.Arbol = Arbol;
