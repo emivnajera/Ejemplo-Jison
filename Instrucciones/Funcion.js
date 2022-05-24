@@ -20,6 +20,7 @@ var Instruccion_1 = require("../Abstract/Instruccion");
 var TablaSimbolos_1 = require("../TablaDeSimbolos/TablaSimbolos");
 var Excepcion_1 = require("../TablaDeSimbolos/Excepcion");
 var Tipo_1 = require("../TablaDeSimbolos/Tipo");
+var Return_1 = require("../Instrucciones/Return");
 var Funcion = /** @class */ (function (_super) {
     __extends(Funcion, _super);
     function Funcion(nombre, parametros, instrucciones, fila, columna) {
@@ -37,6 +38,10 @@ var Funcion = /** @class */ (function (_super) {
             var value = iinstruccion.Interpretar(tree, nuevaTabla);
             if (value instanceof Excepcion_1.Excepcion) {
                 return value;
+            }
+            if (value instanceof Return_1.Return) {
+                this.tipo = value.tipo;
+                return value.result;
             }
         }
         return null;

@@ -20,6 +20,7 @@
 "else"              return 'RELSE'
 "while"             return 'RWHILE'
 "for"               return 'RFOR'
+"return"            return 'RRETURN'
 
 //Simbolos
 ";"                 return 'PUNTOYCOMA'
@@ -77,6 +78,7 @@
     const While = require('../Instrucciones/While')
     const Incremento = require('../Instrucciones/Incremento')
     const For = require('../Instrucciones/For')
+    const Return = require('../Instrucciones/Return')
 %}
 
 // Precedencia de operadores
@@ -113,6 +115,7 @@ INSTRUCCION: PRINT                 {$$=$1}
            | WHILE                 {$$=$1}
            | INCREMENTO PUNTOYCOMA {$$=$1}
            | FOR                   {$$=$1}
+           | RETURN                {$$=$1}
            ;
 
 PRINT:RPRINT PARA EXP PARC PUNTOYCOMA                                                             {$$ = new Imprimir.Imprimir($3, @2.first_line, @2.first_column)};
@@ -146,6 +149,9 @@ IF: RIF PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                               
 
 WHILE: RWHILE PARA EXP PARC LLAVEA INSTRUCCIONES LLAVEC                                           {$$ = new While.While($3, $6, @1.first_line, @1.first_column)};
 
+RETURN: RRETURN EXP PUNTOYCOMA                                                                    {$$ = new Return.Return($2, @1.first_line, @1.first_column)};
+
+
 EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MAS, $1, $3, @1.first_line, @1.first_column )}
    | EXP MENOS EXP                      {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.MENOS, $1, $3, @1.first_line, @1.first_column )}
    | EXP POR EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.OperadorAritmetico.POR, $1, $3, @1.first_line, @1.first_column )}
@@ -164,6 +170,7 @@ EXP: EXP MAS EXP                        {$$ = new Aritmeticas.Aritmetica(TIPO.Op
    | RROUND PARA EXP PARC               {$$ = new Round.Round($3, @1.first_line, @1.first_column)}
    | RTOLOWER PARA EXP PARC             {$$ = new tolower.ToLower($3, @1.first_line, @1.first_column)}
    | PARA EXP PARC                      {$$ = $2}
+   | LLAMADA                            {$$ = $1}
    | ID                                 {$$ = new Identificador.identificador($1,@1.first_line, @1.first_column)}
    | DECIMAL                            {$$ = new Primitivos.Primitivos(TIPO.TIPO.DECIMAL, $1,@1.first_line, @1.first_column )}
    | ENTERO                             {$$ = new Primitivos.Primitivos(TIPO.TIPO.ENTERO, $1,@1.first_line, @1.first_column  )}

@@ -20,6 +20,7 @@ var Instruccion_1 = require("../Abstract/Instruccion");
 var TablaSimbolos_1 = require("../TablaDeSimbolos/TablaSimbolos");
 var Excepcion_1 = require("../TablaDeSimbolos/Excepcion");
 var Tipo_1 = require("../TablaDeSimbolos/Tipo");
+var Return_1 = require("../Instrucciones/Return");
 var If = /** @class */ (function (_super) {
     __extends(If, _super);
     function If(condicion, instruccionesIf, instruccionesElse, fila, columna) {
@@ -43,6 +44,9 @@ var If = /** @class */ (function (_super) {
                     if (result instanceof Excepcion_1.Excepcion) {
                         return result;
                     }
+                    if (result instanceof Return_1.Return) {
+                        return result;
+                    }
                 }
             }
             else {
@@ -52,6 +56,9 @@ var If = /** @class */ (function (_super) {
                         var instruccion = _c[_b];
                         var result = instruccion.Interpretar(tree, nuevaTabla);
                         if (result instanceof Excepcion_1.Excepcion) {
+                            return result;
+                        }
+                        if (result instanceof Return_1.Return) {
                             return result;
                         }
                     }

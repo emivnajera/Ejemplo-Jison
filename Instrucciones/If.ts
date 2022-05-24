@@ -4,6 +4,7 @@ import { TablaSimbolos } from "../TablaDeSimbolos/TablaSimbolos"
 import { Excepcion } from "../TablaDeSimbolos/Excepcion"
 import { TIPO } from "../TablaDeSimbolos/Tipo"
 import { Simbolo } from "../TablaDeSimbolos/Simbolo"
+import { Return } from "../Instrucciones/Return"
 
 export class If extends Instruccion{
     condicion:any
@@ -30,6 +31,9 @@ export class If extends Instruccion{
                     if (result instanceof Excepcion){
                         return result
                     }
+                    if(result instanceof Return){
+                        return result
+                    }
                 }
             }else{
                 if (this.instruccionesElse != []){
@@ -39,6 +43,9 @@ export class If extends Instruccion{
                          if (result instanceof Excepcion){
                              return result
                          }
+                         if(result instanceof Return){
+                            return result
+                        }
                     }
                 }
             }

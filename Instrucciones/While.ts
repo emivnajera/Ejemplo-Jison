@@ -5,6 +5,7 @@ import { Excepcion } from "../TablaDeSimbolos/Excepcion"
 import { TIPO } from "../TablaDeSimbolos/Tipo"
 import { Simbolo } from "../TablaDeSimbolos/Simbolo"
 import { If } from "./If"
+import { Return } from "../Instrucciones/Return"
 
 export class While extends Instruccion{
     condicion:any
@@ -29,6 +30,10 @@ export class While extends Instruccion{
                     for(var instruccion of this.instrucciones){
                         let result = instruccion.Interpretar(tree,nuevaTabla)
                         if(result instanceof Excepcion){
+                            return result
+                        }
+                        
+                        if(result instanceof Return){
                             return result
                         }
                     }

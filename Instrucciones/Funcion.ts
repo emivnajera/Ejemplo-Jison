@@ -4,6 +4,7 @@ import { TablaSimbolos } from "../TablaDeSimbolos/TablaSimbolos"
 import { Excepcion } from "../TablaDeSimbolos/Excepcion"
 import { TIPO } from "../TablaDeSimbolos/Tipo"
 import { Simbolo } from "../TablaDeSimbolos/Simbolo"
+import { Return } from "../Instrucciones/Return"
 
 export class Funcion extends Instruccion{
     nombre:string
@@ -24,6 +25,10 @@ export class Funcion extends Instruccion{
             let value = iinstruccion.Interpretar(tree, nuevaTabla)
             if(value instanceof Excepcion){
                 return value
+            }
+            if(value instanceof Return){
+                this.tipo = value.tipo
+                return value.result
             }
         }
         

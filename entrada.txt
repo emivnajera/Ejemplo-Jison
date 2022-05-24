@@ -1,3 +1,11 @@
-for(var i = 0; i<=10; i++){
-    print(i);
+func mult(x,y){
+    if(y == 0){
+        return 0;
+    }else{
+        return x + mult(x,y-1);;
+    }
 }
+
+var multi = mult(3,2);;
+
+print(multi);

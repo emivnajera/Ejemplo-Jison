@@ -5,6 +5,7 @@ import { Excepcion } from "../TablaDeSimbolos/Excepcion"
 import { TIPO } from "../TablaDeSimbolos/Tipo"
 import { Simbolo } from "../TablaDeSimbolos/Simbolo"
 import { If } from "./If"
+import { Return } from "../Instrucciones/Return"
 
 export class For extends Instruccion{
     declaracion:Instruccion
@@ -40,6 +41,11 @@ export class For extends Instruccion{
                         if(result instanceof Excepcion){
                             return result
                         }
+
+                        if(result instanceof Return){
+                            return result
+                        }
+
                         let actualizacion = this.actualizacion.Interpretar(tree, nuevaTabla)
                         if(actualizacion instanceof Excepcion){
                             return actualizacion

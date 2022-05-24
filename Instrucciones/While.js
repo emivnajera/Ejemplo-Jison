@@ -20,6 +20,7 @@ var Instruccion_1 = require("../Abstract/Instruccion");
 var TablaSimbolos_1 = require("../TablaDeSimbolos/TablaSimbolos");
 var Excepcion_1 = require("../TablaDeSimbolos/Excepcion");
 var Tipo_1 = require("../TablaDeSimbolos/Tipo");
+var Return_1 = require("../Instrucciones/Return");
 var While = /** @class */ (function (_super) {
     __extends(While, _super);
     function While(condicion, instrucciones, fila, columna) {
@@ -41,6 +42,9 @@ var While = /** @class */ (function (_super) {
                         var instruccion = _a[_i];
                         var result = instruccion.Interpretar(tree, nuevaTabla);
                         if (result instanceof Excepcion_1.Excepcion) {
+                            return result;
+                        }
+                        if (result instanceof Return_1.Return) {
                             return result;
                         }
                     }
